@@ -1,0 +1,6 @@
+{
+    "require-dev": {
+        "ray/aop": "2.*@dev",
+        "ray/di": "2.*@dev"
+    }
+}
