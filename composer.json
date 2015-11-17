@@ -26,6 +26,7 @@
         "symfony/config": "*",
         "symfony/proxy-manager-bridge": "*",
         "zendframework/zend-di": "*",
-        "zendframework/zend-servicemanager": "*"
+        "zendframework/zend-servicemanager": "*",
+        "ray/di": "*"
     }
 }
