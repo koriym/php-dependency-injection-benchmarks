@@ -1,37 +1,13 @@
-<?php 
-ini_set('memory_limit', '500M');
-require_once '../testclasses.php';
+<?php
 
-spl_autoload_register(function($className) {
-	$className = ltrim($className, '\\');
-	$fileName  = '';
-	$namespace = '';
-	if ($lastNsPos = strrpos($className, '\\')) {
-		$namespace = substr($className, 0, $lastNsPos);
-		$className = substr($className, $lastNsPos + 1);
-		$fileName  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-	}
-	$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
-
-	require  $fileName;
-});
-
-
-
-use \Ray\Di\Config;	
-
-class Module extends \Ray\Di\AbstractModule
-{
-	public function configure()
-	{
-		
-	}
+$tmpDir = __DIR__ . '/tmp/3';
+if (! file_exists($tmpDir)) {
+	require_once __DIR__ . '/Module.php';
+	mkdir($tmpDir);
+	$compiler = new \Ray\Compiler\DiCompiler(new Module, $tmpDir);
+	$compiler->compile();
 }
-
-
-$injector = Ray\Di\Injector::create([new Module]);
-
-
+$injector = new \Ray\Compiler\ScriptInjector($tmpDir);
 //trigger autoloaders
 $j = $injector->getInstance('J');
 

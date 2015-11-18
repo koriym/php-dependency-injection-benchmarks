@@ -1,22 +1,14 @@
 <?php
 
-$tmpDir = __DIR__ . '/tmp';
-if (! file_exists($tmpDir)) {
-	require_once __DIR__ . '/Module.php';
-	mkdir($tmpDir);
-	$compiler = new \Ray\Compiler\DiCompiler(new Module, $tmpDir);
-	$compiler->compile();
-}
-
+$tmpDir = __DIR__ . '/tmp/4';
 $injector = new \Ray\Compiler\ScriptInjector($tmpDir);
 //trigger autoloaders
-$a = $injector->getInstance('A');
-unset($a);
+$j = $injector->getInstance('A');
 
 $t1 = microtime(true);
 
 for ($i = 0; $i < 10000; $i++) {
-	$a = $injector->getInstance('A');
+	$a = $injector->getInstance('B');
 }
 
 $t2 = microtime(true);

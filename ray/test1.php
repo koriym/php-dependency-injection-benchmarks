@@ -1,45 +1,16 @@
-<?php 
-require_once '../testclasses.php';
-opcache_reset();
-spl_autoload_register(function($className) {
-	$className = ltrim($className, '\\');
-	$fileName  = '';
-	$namespace = '';
-	if ($lastNsPos = strrpos($className, '\\')) {
-		$namespace = substr($className, 0, $lastNsPos);
-		$className = substr($className, $lastNsPos + 1);
-		$fileName  = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-	}
-	$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+<?php
 
-	require  $fileName;
-});
-
-
-
-use \Ray\Di\Config;	
-
-class Module extends \Ray\Di\AbstractModule
-{
-	public function configure()
-	{
-		
-	}
+$t1 = microtime(true);
+$tmpDir = __DIR__ . '/tmp';
+if (! file_exists($tmpDir)) {
+	require_once __DIR__ . '/Module.php';
+	mkdir($tmpDir);
+	$compiler = new \Ray\Compiler\DiCompiler(new Module, $tmpDir);
+	$compiler->compile();
 }
 
-
-//Either use the injector directly, which works for the test but uses 19mb of RAM on this test and 203mb on Test 3
-
-			$injector = Ray\Di\Injector::create([new Module]);
-
-
-//or use a compiled injector, which cannot be tested because it always returns the same instance.
-$cache = new \Doctrine\Common\Cache\MemcachedCache();
-$m = new Memcached();
-$m->addServer('localhost', 11211);
-$cache->setMemcached($m);
-
-$injector = \Ray\Di\DiCompiler::create($injector, $cache, 'ray', './tmp');
+$injector = new \Ray\Compiler\ScriptInjector($tmpDir);
+$instance = $injector->getInstance('A');
 
 $a = $injector->getInstance('A');
 $a1 = $injector->getInstance('A');
